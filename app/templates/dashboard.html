@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+    <h2>Parking Dashboard</h2>
+    {% if show_links %}
+    <div class="mb-3">
+        <a href="/parking" class="btn btn-success">إدارة المواقف</a>
+        <a href="/analytics" class="btn btn-info">التحليلات والإيرادات</a>
+        <a href="/logs" class="btn btn-warning">سجل العمليات</a>
+        {% if current_user.role == 'admin' %}
+        <a href="/users" class="btn btn-secondary">إدارة المستخدمين</a>
+        {% endif %}
+    </div>
+    {% endif %}
+    <div id="parking-slots">
+        <!-- Parking slots will be updated via AJAX -->
+    </div>
+    <script>
+    function fetchDashboardSlots() {
+        fetch('/api/slots')
+            .then(res => res.json())
+            .then(slots => {
+                const container = document.getElementById('parking-slots');
+                let html = '<div class="row">';
+                slots.forEach(slot => {
+                    html += `<div class="col-md-3 mb-2">
+                        <div class="card ${slot.status === 'free' ? 'border-success' : 'border-danger'}">
+                            <div class="card-body">
+                                <h5 class="card-title">موقف ${slot.id}</h5>
+                                <p class="card-text">الحالة: <span class="fw-bold">${slot.status === 'free' ? 'متاح' : 'مشغول'}</span></p>
+                                <p class="card-text">المستشعر: ${slot.sensor_value ? '🚗' : '🅿️'}</p>
+                            </div>
+                        </div>
+                    </div>`;
+                });
+                html += '</div>';
+                container.innerHTML = html;
+            });
+    }
+    fetchDashboardSlots();
+    setInterval(fetchDashboardSlots, 2000);
+    </script>
+</div>
+{% endblock %}

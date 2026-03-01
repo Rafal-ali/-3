@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+    <h2>التحليلات والإيرادات</h2>
+    <div class="revenue-chart-container">
+        <canvas id="revenueChart"></canvas>
+    </div>
+    <div class="mt-4">
+        <h4>إحصائيات السيارات</h4>
+        <div id="vehicleStats"></div>
+    </div>
+</div>
+<script>
+// جلب بيانات الإيرادات
+fetch('/api/revenue')
+    .then(response => response.json())
+    .then(data => {
+        const ctx = document.getElementById('revenueChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: data.labels,
+                datasets: [{
+                    label: 'الإيرادات',
+                    data: data.values,
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            }
+        });
+    });
+// جلب إحصائيات السيارات
+fetch('/api/analytics')
+    .then(response => response.json())
+    .then(data => {
+        let stats = '<ul>';
+        data.labels.forEach((label, i) => {
+            stats += `<li>${label}: ${data.values[i]} سيارة</li>`;
+        });
+        stats += '</ul>';
+        document.getElementById('vehicleStats').innerHTML = stats;
+    });
+</script>
+{% endblock %}

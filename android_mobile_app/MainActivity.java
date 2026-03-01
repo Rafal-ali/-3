@@ -1,0 +1,19 @@
+package com.example.smartparking;
+
+import android.os.Bundle;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
+import androidx.appcompat.app.AppCompatActivity;
+
+public class MainActivity extends AppCompatActivity {
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        WebView webView = new WebView(this);
+        webView.getSettings().setJavaScriptEnabled(true);
+        webView.setWebViewClient(new WebViewClient());
+        // ضع هنا رابط موقعك على Render أو أي استضافة
+        webView.loadUrl("https://your-app-name.onrender.com");
+        setContentView(webView);
+    }
+}

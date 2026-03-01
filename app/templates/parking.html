@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+    <h2>إدارة المواقف</h2>
+    <form id="entryForm" class="mb-4">
+        <div class="row">
+            <div class="col-md-4">
+                <input type="text" class="form-control" name="plate_number" placeholder="رقم السيارة" required>
+            </div>
+            <div class="col-md-4">
+                <select class="form-control" name="slot_id" id="slotSelect" required>
+                    <option value="">اختر موقف</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <button type="submit" class="btn btn-primary">دخول السيارة</button>
+            </div>
+        </div>
+    </form>
+    <form id="exitForm" class="mb-4">
+        <div class="row">
+            <div class="col-md-4">
+                <select class="form-control" name="slot_id" id="exitSlotSelect" required>
+                    <option value="">اختر موقف لإخراج السيارة</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <button type="submit" class="btn btn-danger">خروج السيارة</button>
+            </div>
+        </div>
+    </form>
+    <div id="parking-management">
+        <!-- Parking management UI -->
+    </div>
+</div>
+<script>
+// جلب المواقف وتحديث الخيارات
+function fetchSlots() {
+    fetch('/api/slots')
+        .then(response => response.json())
+        .then(data => {
+            let slotSelect = document.getElementById('slotSelect');
+            let exitSlotSelect = document.getElementById('exitSlotSelect');
+            slotSelect.innerHTML = '<option value="">اختر موقف</option>';
+            exitSlotSelect.innerHTML = '<option value="">اختر موقف لإخراج السيارة</option>';
+            data.forEach(slot => {
+                if (slot.status === 'free') {
+                    slotSelect.innerHTML += `<option value="${slot.id}">موقف ${slot.id}</option>`;
+                }
+                if (slot.status === 'occupied') {
+                    exitSlotSelect.innerHTML += `<option value="${slot.id}">موقف ${slot.id}</option>`;
+                }
+            });
+        });
+}
+fetchSlots();
+setInterval(fetchSlots, 2000);
+
+// دخول السيارة
+const entryForm = document.getElementById('entryForm');
+entryForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    const plate_number = entryForm.plate_number.value;
+    const slot_id = entryForm.slot_id.value;
+    fetch('/api/vehicle/entry', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({plate_number, slot_id})
+    }).then(res => res.json()).then(data => {
+        if (data.success) {
+            alert('تم دخول السيارة بنجاح');
+            fetchSlots();
+        } else {
+            alert(data.error);
+        }
+    });
+});
+// خروج السيارة
+const exitForm = document.getElementById('exitForm');
+exitForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    const slot_id = exitForm.slot_id.value;
+    fetch('/api/vehicle/exit', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({slot_id})
+    }).then(res => res.json()).then(data => {
+        if (data.success) {
+            alert('تم إخراج السيارة بنجاح');
+            fetchSlots();
+        } else {
+            alert(data.error);
+        }
+    });
+});
+</script>
+{% endblock %}

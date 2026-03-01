@@ -1,0 +1,46 @@
+/* Smart Parking System Custom Styles */
+body {
+    background-color: #f8f9fa;
+}
+.container {
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    background: #fff;
+    padding: 24px 18px;
+}
+h2, h4 {
+    font-weight: 700;
+    color: #2c3e50;
+}
+.btn-success, .btn-info, .btn-warning {
+    margin-right: 8px;
+}
+.table {
+    font-size: 1.05rem;
+}
+.card {
+    border-radius: 10px;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.05);
+}
+.card-title {
+    font-size: 1.2rem;
+    color: #2980b9;
+}
+.table-dark th {
+    background: #2980b9 !important;
+    color: #fff !important;
+}
+.revenue-chart-container {
+    background: #eaf2fb;
+    border-radius: 10px;
+    padding: 18px;
+    margin-bottom: 24px;
+}
+ul {
+    list-style: none;
+    padding: 0;
+}
+ul li {
+    padding: 4px 0;
+    font-size: 1.05rem;
+}

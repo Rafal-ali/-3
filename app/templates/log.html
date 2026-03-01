@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+  <h2>سجل العمليات (Operation Log)</h2>
+  <div class="table-responsive mt-3">
+    <table class="table table-bordered table-hover">
+      <thead class="table-dark">
+        <tr>
+          <th>الوقت</th>
+          <th>العملية</th>
+          <th>المستخدم</th>
+          <th>تفاصيل</th>
+        </tr>
+      </thead>
+      <tbody id="log-table-body">
+        <!-- AJAX will fill logs here -->
+      </tbody>
+    </table>
+  </div>
+</div>
+<script>
+function fetchLogs() {
+  fetch('/api/logs')
+    .then(res => res.json())
+    .then(logs => {
+      const tbody = document.getElementById('log-table-body');
+      tbody.innerHTML = '';
+      logs.forEach(log => {
+        tbody.innerHTML += `<tr>
+          <td>${new Date(log.timestamp).toLocaleString()}</td>
+          <td>${log.action}</td>
+          <td>${log.user_id}</td>
+          <td>${log.details}</td>
+        </tr>`;
+      });
+    });
+}
+fetchLogs();
+setInterval(fetchLogs, 5000);
+</script>
+{% endblock %}

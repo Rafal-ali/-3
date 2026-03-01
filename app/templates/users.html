@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+  <h2>إدارة المستخدمين</h2>
+  <form method="post" class="mb-4">
+    <div class="row">
+      <div class="col-md-3">
+        <input type="text" class="form-control" name="username" placeholder="اسم المستخدم" required>
+      </div>
+      <div class="col-md-3">
+        <input type="password" class="form-control" name="password" placeholder="كلمة المرور" required>
+      </div>
+      <div class="col-md-3">
+        <select class="form-control" name="role" required>
+          <option value="admin">مشرف</option>
+          <option value="operator">مشغل</option>
+        </select>
+      </div>
+      <div class="col-md-3">
+        <button type="submit" class="btn btn-primary">إضافة مستخدم</button>
+      </div>
+    </div>
+  </form>
+  <div class="table-responsive">
+    <table class="table table-bordered table-hover">
+      <thead class="table-dark">
+        <tr>
+          <th>اسم المستخدم</th>
+          <th>الصلاحية</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for user in users %}
+        <tr>
+          <td>{{ user.username }}</td>
+          <td>{{ user.role }}</td>
+          <td>
+            {% if user.username != 'admin' %}
+            <form method="post" action="/users/delete/{{ user.id }}" style="display:inline-block">
+              <button type="submit" class="btn btn-danger btn-sm">حذف</button>
+            </form>
+            <button class="btn btn-warning btn-sm" onclick="showEditForm({{ user.id }}, '{{ user.username }}', '{{ user.password }}', '{{ user.role }}')">تعديل</button>
+            {% else %}
+            <span class="text-muted">لا يمكن حذف أو تعديل المشرف الرئيسي</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <!-- Edit user modal -->
+  <div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="editUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <form id="editUserForm" method="post">
+          <div class="modal-header">
+            <h5 class="modal-title" id="editUserModalLabel">تعديل المستخدم</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <input type="hidden" name="user_id" id="editUserId">
+            <div class="mb-3">
+              <label class="form-label">اسم المستخدم</label>
+              <input type="text" class="form-control" name="username" id="editUsername" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">كلمة المرور</label>
+              <input type="text" class="form-control" name="password" id="editPassword" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">الصلاحية</label>
+              <select class="form-control" name="role" id="editRole" required>
+                <option value="admin">مشرف</option>
+                <option value="operator">مشغل</option>
+              </select>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+            <button type="submit" class="btn btn-warning">حفظ التعديلات</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <script>
+    function showEditForm(id, username, password, role) {
+      document.getElementById('editUserId').value = id;
+      document.getElementById('editUsername').value = username;
+      document.getElementById('editPassword').value = password;
+      document.getElementById('editRole').value = role;
+      var modal = new bootstrap.Modal(document.getElementById('editUserModal'));
+      modal.show();
+      document.getElementById('editUserForm').action = '/users/edit/' + id;
+    }
+  </script>
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

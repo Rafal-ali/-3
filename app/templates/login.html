@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+    <h2>Login</h2>
+    <form method="post">
+        <div class="mb-3">
+            <label for="username" class="form-label">Username</label>
+            <input type="text" class="form-control" id="username" name="username" required>
+        </div>
+        <div class="mb-3">
+            <label for="password" class="form-label">Password</label>
+            <input type="password" class="form-control" id="password" name="password" required>
+        </div>
+        <div class="mb-3">
+            <label for="role" class="form-label">Role (اختيار الصلاحية)</label>
+            <select class="form-control" id="role" name="role">
+                <option value="admin">مشرف (Admin)</option>
+                <option value="operator">مشغل (Operator)</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">تسجيل الدخول</button>
+        <button type="button" class="btn btn-success ms-2" data-bs-toggle="modal" data-bs-target="#registerModal">إنشاء حساب جديد</button>
+    </form>
+        <!-- Registration Modal -->
+        <div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form method="post" action="/register">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="registerModalLabel">إنشاء حساب جديد</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label for="reg_username" class="form-label">اسم المستخدم</label>
+                                <input type="text" class="form-control" id="reg_username" name="username" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="reg_password" class="form-label">كلمة المرور</label>
+                                <input type="password" class="form-control" id="reg_password" name="password" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="reg_role" class="form-label">الصلاحية</label>
+                                <select class="form-control" id="reg_role" name="role">
+                                    <option value="operator">مشغل (Operator)</option>
+                                    <option value="admin">مشرف (Admin)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                            <button type="submit" class="btn btn-success">إنشاء الحساب</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+</div>
+{% endblock %}
