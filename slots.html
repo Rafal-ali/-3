@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <title>إدارة المواقف</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+    <div class="container mt-5">
+        <h2 class="mb-4 text-center text-primary fw-bold">إدارة المواقف</h2>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, msg in messages %}
+                <div class="alert alert-{{ category }} text-center fw-bold">{{ msg }}</div>
+            {% endfor %}
+        {% endif %}
+        {% endwith %}
+        <div class="alert alert-info text-center fw-bold">يمكنك إضافة أو حذف أو تعديل المواقف.</div>
+        <form method="post" class="mb-4">
+            <div class="row g-2">
+                <div class="col-md-8">
+                    <input type="number" name="slot_id" class="form-control" placeholder="رقم الموقف الجديد" required>
+                </div>
+                <div class="col-md-4">
+                    <button type="submit" class="btn btn-success w-100">إضافة موقف</button>
+                </div>
+            </div>
+        </form>
+        <table class="table table-bordered table-striped">
+            <thead class="table-dark">
+                <tr>
+                    <th>رقم الموقف</th>
+                    <th>الحالة</th>
+                    <th>حذف</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for slot in slots %}
+                <tr>
+                    <td>{{ slot[0] }}</td>
+                    <td>
+                        <form method="post" action="/slots/toggle/{{ slot[0] }}" style="display:inline-block">
+                            <button type="submit" class="btn btn-warning btn-sm">{{ 'متاح' if slot[1]=='free' else 'مشغول' }}</button>
+                        </form>
+                    </td>
+                    <td>
+                        <form method="post" action="/slots/delete/{{ slot[0] }}">
+                            <button type="submit" class="btn btn-danger btn-sm">حذف</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <a href="/dashboard" class="btn btn-secondary mt-3">رجوع للوحة التحكم</a>
+            {% if session['role'] == 'admin' %}
+            <form method="post" action="/admin/reset_slots" class="mt-3">
+                <button type="submit" class="btn btn-danger w-100 fw-bold">إعادة تعيين جميع المواقف (تصفير)</button>
+            </form>
+            {% endif %}
+    </div>
+</body>
+</html>
