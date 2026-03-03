@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">المواقف المتاحة</h2>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>رقم الموقف</th>
+                <th>الحالة</th>
+                <th>رقم السيارة</th>
+                <th>حجز</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for slot in slots %}
+            <tr>
+                <td>{{ slot.id }}</td>
+                <td>{{ 'متاح' if slot.status == 'free' else 'محجوز' }}</td>
+                <td>{{ slot.car_number or '-' }}</td>
+                <td>
+                    {% if slot.status == 'free' %}
+                    <form method="post">
+                        <input type="hidden" name="slot_id" value="{{ slot.id }}">
+                        <input type="text" name="car_number" placeholder="رقم السيارة" required class="form-control mb-2">
+                        <button type="submit" class="btn btn-success btn-sm">حجز</button>
+                    </form>
+                    {% else %}-{% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

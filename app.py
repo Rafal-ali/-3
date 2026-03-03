@@ -101,12 +101,20 @@ def login():
 
     if request.method == "POST":
         username = request.form.get("username", "").strip()
-        # تسجيل الدخول لأي مستخدم بدون تحقق
-        session["user_id"] = 0
-        session["username"] = username
-        session["role"] = "customer"
-        flash("تم تسجيل الدخول بنجاح!", "success")
-        return redirect(url_for("dashboard"))
+        password = request.form.get("password", "")
+
+        with get_db_connection() as connection:
+            user = connection.execute("SELECT * FROM users WHERE username = ?", (username,)).fetchone()
+
+        if user and bcrypt.checkpw(password.encode("utf-8"), user["password"].encode("utf-8")):
+            session["user_id"] = user["id"]
+            session["username"] = user["username"]
+            session["role"] = user["role"]
+            flash("تم تسجيل الدخول بنجاح!", "success")
+            return redirect(url_for("dashboard"))
+
+        flash("اسم المستخدم أو كلمة المرور غير صحيحة", "danger")
+        return render_template("login.html")
 
     return render_template("login.html")
 
@@ -485,4 +493,4 @@ if __name__ == "__main__":
     runtime_port = int(os.environ.get("PORT", SERVER_PORT))
     local_ip = get_local_ip()
     print(f"Local Network URL: http://{local_ip}:{runtime_port}")
-    app.run(host="0.0.0.0", port=runtime_port)
+    app.run(host="0.0.0.0", port=runtime_port,debug=False)

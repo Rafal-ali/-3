@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">جميع المواقف</h2>
+    <a href="{{ url_for('admin_add_slot') }}" class="btn btn-success mb-3">إضافة موقف جديد</a>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>رقم الموقف</th>
+                <th>الحالة</th>
+                <th>رقم السيارة</th>
+                <th>المستخدم</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for slot in slots %}
+            <tr>
+                <td>{{ slot.id }}</td>
+                <td>{{ 'متاح' if slot.status == 'free' else 'محجوز' }}</td>
+                <td>{{ slot.car_number or '-' }}</td>
+                <td>{{ slot.user_id or '-' }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
