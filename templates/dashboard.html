@@ -70,5 +70,10 @@
             {% endfor %}
         </div>
     </div>
+    <script src="/app/static/auto_refresh.js"></script>
+    <script>
+    // NEW: تفعيل التحديث التلقائي للوحة التحكم
+    autoRefreshSlots(window.location.pathname, "slots-dashboard");
+    </script>
 </body>
 </html>
