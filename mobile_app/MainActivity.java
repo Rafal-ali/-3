@@ -11,9 +11,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         WebView webView = new WebView(this);
         webView.getSettings().setJavaScriptEnabled(true);
+        webView.getSettings().setDomStorageEnabled(true);
         webView.setWebViewClient(new WebViewClient());
-        // رابط موقعك الفعلي على Heroku أو الاستضافة
-        webView.loadUrl("https://your-app-name.herokuapp.com");
+        String webAppUrl = BuildConfig.DEBUG
+            ? "http://10.0.2.2:5000/login"
+            : "https://YOUR-RENDER-APP.onrender.com/login";
+        webView.loadUrl(webAppUrl);
         setContentView(webView);
     }
 }

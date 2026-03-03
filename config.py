@@ -1,8 +1,5 @@
-# Flask and DB config
-SECRET_KEY = 'your-secret-key'
-# Use a database path relative to the app directory
+
+# إعدادات قاعدة بيانات SQLite فقط
 import os
-BASE_DIR = os.path.abspath(os.path.dirname(__file__))
-SQLALCHEMY_DATABASE_URI = f"sqlite:///{os.path.join(BASE_DIR, 'app', 'database', 'database.db')}"
-SQLALCHEMY_TRACK_MODIFICATIONS = False
-LOGIN_DISABLED = False
+DB_PATH = os.path.join(os.path.dirname(__file__), 'instance', 'parking.db')
+SECRET_KEY = 'your-secret-key'

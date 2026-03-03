@@ -7,6 +7,18 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 </head>
 <body class="bg-light">
+        <div class="container mt-3">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                {% endfor %}
+            {% endif %}
+            {% endwith %}
+        </div>
         <!-- Toast Notification + Total Price Banner -->
         <!-- Flash Danger Toast (for booking restriction) -->
         {% with messages = get_flashed_messages(with_categories=true) %}
@@ -76,8 +88,34 @@
         {% endif %}
         <div class="container mt-4">
         <h2 class="mb-4 text-center text-primary fw-bold">حجز موقف</h2>
-                <div class="text-end mb-3">
+                <div class="d-flex justify-content-end gap-2 mb-3">
+                    <button type="button" class="btn btn-outline-primary fw-bold" onclick="toggleNotifications()">إشعارات</button>
                     <a href="{{ url_for('logout') }}" class="btn btn-outline-danger fw-bold">تسجيل الخروج</a>
+                </div>
+                <div id="notificationsPanel" class="card shadow-sm mb-3 d-none">
+                    <div class="card-body">
+                        {% set notifications = session.get('notifications', []) %}
+                        {% if notifications %}
+                        <h6 class="mb-2">آخر الإشعارات</h6>
+                        <ul class="list-group mb-3">
+                            {% for item in notifications[:5] %}
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <span>{{ item.message }}</span>
+                                <small class="text-muted">{{ item.time }}</small>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                        {% else %}
+                        <div class="alert alert-light border mb-3">لا توجد إشعارات بعد.</div>
+                        {% endif %}
+
+                        <h6 class="mb-2">سياسة الإلغاء</h6>
+                        <ul class="mb-0">
+                            <li>عند إلغاء الحجز، يتم احتساب ضريبة إلغاء.</li>
+                            <li>ضريبة الإلغاء: 10% من مبلغ الحجز.</li>
+                            <li>الحد الأدنى لضريبة الإلغاء: 500 دينار.</li>
+                        </ul>
+                    </div>
                 </div>
         <div class="row">
             {% for slot in slots %}
@@ -119,6 +157,11 @@
                             {% if slot[2] %}
                             <div class="mb-2">رقم السيارة: <span class="fw-bold">{{ slot[2] }}</span></div>
                             {% endif %}
+                            {% if slot[3] == session.get('user_id') %}
+                            <form method="post" action="/slot/{{ slot[0] }}/toggle">
+                                <button type="submit" class="btn btn-outline-danger w-100">إلغاء حجزي (مع ضريبة)</button>
+                            </form>
+                            {% endif %}
                         {% endif %}
                     </div>
                 </div>
@@ -126,5 +169,13 @@
         {% endfor %}
         </div>
     </div>
+    <script>
+        function toggleNotifications() {
+            var panel = document.getElementById('notificationsPanel');
+            if (!panel) return;
+            panel.classList.toggle('d-none');
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

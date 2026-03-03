@@ -4,10 +4,18 @@
 		{
 			"label": "تشغيل تطبيق Flask",
 			"type": "shell",
-			"command": "python app.py",
+			   "command": ".venv\\Scripts\\python.exe app.py",
 			"args": [],
 			"isBackground": false,
 			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "إنشاء قاعدة بيانات parking_db",
+			"type": "shell",
+			"command": "mysql -u root -e \"CREATE DATABASE IF NOT EXISTS parking_db;\"",
+			"args": [],
+			"isBackground": false,
 			"group": "build"
 		}
 	]
