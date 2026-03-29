@@ -45,3 +45,4 @@ A professional, production-level smart parking system using Python, Flask, SQLit
 - Add IoT simulation
 - Complete AJAX and Chart.js integration
 - Finalize logging and analytics
+"# 02" 
